@@ -1,11 +1,12 @@
-go 1.24.5
+go 1.24.4
 
 use (
 	.
+	config
+	database
 	example/getting-started
 	framework
 	http
 	logger
-	database
 	metrics
 )

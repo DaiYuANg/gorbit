@@ -1,4 +1,4 @@
-package framework
+package config
 
 type Mode = int
 

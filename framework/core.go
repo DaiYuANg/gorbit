@@ -10,7 +10,11 @@ import (
 type Framework[T any] struct {
 	fxOpts      []fx.Option
 	fiberRoutes []func(router fiber.Router)
-	cfg         *koanf.Koanf
-	coreCfg     *AppConfig
-	userCfg     T
+	cfgParser   *koanf.Koanf
+	cfg         T
+	app         *fx.App
+}
+
+func (t Framework[T]) Run() {
+	t.app.Run()
 }

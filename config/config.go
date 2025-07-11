@@ -1,7 +1,10 @@
-package framework
+package config
+
+import "go.uber.org/zap/zapcore"
 
 type AppConfig struct {
-	Mode Mode
+	Mode     Mode
+	LogLevel zapcore.Level
 }
 
 func defaultConfig() *AppConfig {

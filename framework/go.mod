@@ -5,8 +5,9 @@ go 1.24
 require (
 	github.com/gofiber/fiber/v3 v3.0.0-beta.4
 	github.com/joho/godotenv v1.5.1
-	github.com/knadh/koanf/v2 v2.2.1
+	github.com/knadh/koanf/v2 v2.2.2
 	go.uber.org/fx v1.24.0
+	go.uber.org/zap v1.27.0
 )
 
 require (
@@ -29,7 +30,6 @@ require (
 	github.com/x448/float16 v0.8.4 // indirect
 	go.uber.org/dig v1.19.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/crypto v0.39.0 // indirect
 	golang.org/x/net v0.41.0 // indirect
 	golang.org/x/sys v0.34.0 // indirect

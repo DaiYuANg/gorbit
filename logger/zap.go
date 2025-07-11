@@ -10,6 +10,14 @@ import (
 	"syscall"
 )
 
+var Module = fx.Module("framework_logger",
+	fx.Provide(
+		newLogger,
+		sugaredLogger,
+	),
+	fx.Invoke(deferLogger),
+)
+
 func newLogger() *zap.Logger {
 	encoderCfg := zap.NewProductionEncoderConfig() // 可用 zap.NewProductionEncoderConfig() 视需求选择
 	encoderCfg.EncodeLevel = zapcore.CapitalColorLevelEncoder
