@@ -1,20 +1,15 @@
 package framework
 
 import (
-	"github.com/gofiber/fiber/v3"
 	_ "github.com/joho/godotenv/autoload"
-	"github.com/knadh/koanf/v2"
-	"go.uber.org/fx"
+	"github.com/samber/do/v2"
 )
 
-type Framework[T any] struct {
-	fxOpts      []fx.Option
-	fiberRoutes []func(router fiber.Router)
-	cfgParser   *koanf.Koanf
-	cfg         T
-	app         *fx.App
+type Options struct {
+	ConfigPath string
 }
 
-func (t Framework[T]) Run() {
-	t.app.Run()
+type Framework struct {
+	Injector do.Injector
+	Options  Options
 }

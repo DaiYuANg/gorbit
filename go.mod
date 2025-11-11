@@ -179,8 +179,6 @@ require (
 	github.com/ryancurrah/gomodguard v1.4.1 // indirect
 	github.com/ryanrolds/sqlclosecheck v0.5.1 // indirect
 	github.com/sajari/fuzzy v1.0.0 // indirect
-	github.com/samber/do/v2 v2.0.0 // indirect
-	github.com/samber/go-type-to-string v1.8.0 // indirect
 	github.com/sanposhiho/wastedassign/v2 v2.1.0 // indirect
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.2 // indirect
 	github.com/sashamelentyev/interfacebloat v1.1.0 // indirect

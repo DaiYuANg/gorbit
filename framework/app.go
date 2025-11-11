@@ -1,57 +1,29 @@
 package framework
 
 import (
-	"context"
-
+	"github.com/gofiber/fiber/v3"
 	"github.com/samber/do/v2"
-	"github.com/spf13/cobra"
+	"github.com/samber/oops"
 )
 
-type App struct {
-	container *do.RootScope
-	opts      Options
-	rootCmd   *cobra.Command
+func New(opts Options) *Framework {
+	i := do.New()
+	fw := &Framework{
+		Injector: i,
+		Options:  opts,
+	}
+	return fw
 }
 
-func New(opts ...Option) *App {
-	o := defaultOptions()
-	for _, opt := range opts {
-		opt(&o)
-	}
-
-	injector := do.New()
-
-	app := &App{
-		container: injector,
-		opts:      o,
-		rootCmd:   &cobra.Command{Use: o.Name, Short: o.Description},
-	}
-
-	// 注册配置模块
-	if o.ConfigLoader != nil {
-		cfg, err := o.ConfigLoader()
-		if err != nil {
-			panic(err)
-		}
-		do.ProvideValue(injector, cfg)
-	}
-
-	// 注册命令
-	if o.RootRun != nil {
-		app.rootCmd.RunE = func(cmd *cobra.Command, args []string) error {
-			ctx := context.Background()
-			return o.RootRun(ctx, injector)
-		}
-	}
-
-	// 注册子命令
-	for _, sub := range o.SubCommands {
-		app.rootCmd.AddCommand(sub)
-	}
-
-	return app
+// Use 注册模块
+func (fw *Framework) Use(register func(i do.Injector) error) error {
+	return oops.Wrap(register(fw.Injector))
 }
 
-func (a *App) Run() error {
-	return a.rootCmd.Execute()
+// Run 启动服务（例如启动 HTTP server）
+func (fw *Framework) Run() error {
+	if fiberApp, err := do.Invoke[*fiber.App](fw.Injector); err == nil {
+		return oops.Wrap(fiberApp.Listen(":8080"))
+	}
+	return nil
 }

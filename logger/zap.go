@@ -1,21 +1,10 @@
 package logger
 
 import (
-	"errors"
-	"fmt"
-	"go.uber.org/fx"
+	"os"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"os"
-	"syscall"
-)
-
-var Module = fx.Module("framework_logger",
-	fx.Provide(
-		newLogger,
-		sugaredLogger,
-	),
-	fx.Invoke(deferLogger),
 )
 
 func newLogger() *zap.Logger {
@@ -36,13 +25,13 @@ func sugaredLogger(log *zap.Logger) *zap.SugaredLogger {
 	return log.Sugar()
 }
 
-func deferLogger(lc fx.Lifecycle, logger *zap.Logger) {
-	lc.Append(
-		fx.StopHook(func() error {
-			if err := logger.Sync(); err != nil && !errors.Is(err, syscall.EINVAL) {
-				return fmt.Errorf("logger sync failed: %v", err)
-			}
-			return nil
-		}),
-	)
-}
+//func deferLogger(lc fx.Lifecycle, logger *zap.Logger) {
+//	lc.Append(
+//		fx.StopHook(func() error {
+//			if err := logger.Sync(); err != nil && !errors.Is(err, syscall.EINVAL) {
+//				return fmt.Errorf("logger sync failed: %v", err)
+//			}
+//			return nil
+//		}),
+//	)
+//}
