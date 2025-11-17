@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/sqlitedialect"
 	"github.com/uptrace/bun/driver/sqliteshim"

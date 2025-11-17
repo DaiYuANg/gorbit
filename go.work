@@ -2,11 +2,11 @@ go 1.25.0
 
 use (
 	.
-	config
-	database
-	example/getting-started
+	./modules/config
+	./modules/data
+	./examples/getting-started
 	framework
-	http
-	logger
-	metrics
+	./modules/http
+	./modules/logger
+	./modules/metrics
 )
