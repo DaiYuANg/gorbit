@@ -1,10 +1,9 @@
 package config
 
-import "go.uber.org/zap/zapcore"
-
 type AppConfig struct {
-	Mode     Mode
-	LogLevel zapcore.Level
+	Mode Mode
+	Name string `json:"name" koanf:"name"`
+	Env  string `json:"env"  koanf:"env"`
 }
 
 func defaultConfig() *AppConfig {
