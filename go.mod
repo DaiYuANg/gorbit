@@ -1,4 +1,4 @@
-module github.com/daiyuang/gorbit
+module github.com/DaiYuANg/gorbit
 
 go 1.24
 

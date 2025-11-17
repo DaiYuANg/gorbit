@@ -1,4 +1,4 @@
-module github.com/daiyuang/gorbit/framework
+module github.com/DaiYuANg/gorbit/framework
 
 go 1.25.0
 

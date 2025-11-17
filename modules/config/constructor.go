@@ -3,7 +3,7 @@ package config
 import (
 	"sync"
 
-	"github.com/daiyuang/gorbit/framework"
+	"github.com/DaiYuANg/gorbit/framework"
 	"github.com/samber/do/v2"
 )
 

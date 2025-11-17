@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/daiyuang/gorbit/config"
+	"github.com/DaiYuANg/gorbit/config"
 )
 
 type UserConfig struct {

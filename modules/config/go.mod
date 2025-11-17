@@ -1,4 +1,4 @@
-module github.com/daiyuang/gorbit/config
+module github.com/DaiYuANg/gorbit/config
 
 go 1.24.0
 

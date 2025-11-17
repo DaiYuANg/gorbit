@@ -1,3 +1,3 @@
-module github.com/daiyuang/gorbit/cli
+module github.com/DaiYuANg/gorbit/cli
 
 go 1.25

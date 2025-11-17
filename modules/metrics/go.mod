@@ -1,4 +1,4 @@
-module github.com/daiyuang/gorbit/metrics
+module github.com/DaiYuANg/gorbit/metrics
 
 go 1.24.0
 
