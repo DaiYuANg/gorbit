@@ -10,7 +10,8 @@ require (
 	github.com/knadh/koanf/providers/file v1.2.0
 	github.com/knadh/koanf/v2 v2.3.0
 	github.com/samber/do/v2 v2.0.0
-	github.com/samber/oops v1.19.3
+	github.com/samber/oops v1.19.4
+	github.com/stanipetrosyan/go-eventbus v0.9.0
 )
 
 require (
@@ -39,5 +40,5 @@ require (
 	golang.org/x/crypto v0.43.0 // indirect
 	golang.org/x/net v0.46.0 // indirect
 	golang.org/x/sys v0.38.0 // indirect
-	golang.org/x/text v0.30.0 // indirect
+	golang.org/x/text v0.31.0 // indirect
 )
