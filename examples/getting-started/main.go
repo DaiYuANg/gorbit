@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/DaiYuANg/gorbit/config"
 	"github.com/DaiYuANg/gorbit/framework"
-	"github.com/DaiYuANg/gorbit/http"
+	"github.com/DaiYuANg/gorbit/modules/config"
+	"github.com/DaiYuANg/gorbit/modules/http"
 	"github.com/gofiber/fiber/v3"
 )
 

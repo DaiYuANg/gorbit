@@ -1,4 +1,4 @@
-module github.com/DaiYuANg/gorbit/logger
+module github.com/DaiYuANg/gorbit/modules/logger
 
 go 1.24
 

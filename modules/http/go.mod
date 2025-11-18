@@ -1,4 +1,4 @@
-module github.com/DaiYuANg/gorbit/http
+module github.com/DaiYuANg/gorbit/modules/http
 
 go 1.25.0
 

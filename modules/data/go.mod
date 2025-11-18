@@ -1,4 +1,4 @@
-module github.com/DaiYuANg/gorbit/data
+module github.com/DaiYuANg/gorbit/modules/data
 
 go 1.24.0
 

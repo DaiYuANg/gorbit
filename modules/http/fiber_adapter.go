@@ -15,3 +15,8 @@ func (fa *FiberAdapter) Listen(addr string) error {
 func (fa *FiberAdapter) Shutdown() error {
 	return fa.App.Shutdown()
 }
+
+func NewFiberAdapter(config ...fiber.Config) *FiberAdapter {
+	app := fiber.New(config...)
+	return &FiberAdapter{App: app}
+}
