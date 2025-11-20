@@ -2,11 +2,12 @@ go 1.25.0
 
 use (
 	.
-	./modules/config
-	./modules/data
+	./config
+	./data
 	./examples/getting-started
 	framework
-	./modules/http
-	./modules/logger
-	./modules/metrics
+	./http
+	./metrics
+	./logger/zap
+	pkg
 )

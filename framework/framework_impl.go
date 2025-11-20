@@ -2,52 +2,53 @@ package framework
 
 import (
 	"fmt"
+	"log/slog"
 
+	"github.com/DaiYuANg/gorbit/pkg"
 	_ "github.com/joho/godotenv/autoload"
+	"github.com/samber/oops"
 )
 
 func (f *Framework) Run() error {
-	f.ctx.Publish(EventFrameworkRegisterStart, nil)
-
-	// 1) Register 阶段（全部模块）
-	for _, m := range f.modules {
-		if err := m.Register(f.injector); err != nil {
-			return fmt.Errorf("module %s register failed: %w", m.Name(), err)
+	for _, phase := range defaultPhases {
+		if err := f.runPhase(phase); err != nil {
+			return err
 		}
 	}
-
-	f.ctx.Publish(EventFrameworkRegisterDone, nil)
-
-	// 2) Init 阶段
-	f.ctx.Publish(EventFrameworkInitStart, nil)
-
-	for _, m := range f.modules {
-		if err := m.Init(f.ctx); err != nil {
-			return fmt.Errorf("module %s init failed: %w", m.Name(), err)
-		}
-	}
-
-	f.ctx.Publish(EventFrameworkInitDone, nil)
-
-	// 3) Start 阶段
-	f.ctx.Publish(EventFrameworkStart, nil)
-
-	for _, m := range f.modules {
-		if err := m.Start(f.ctx); err != nil {
-			return fmt.Errorf("module %s start failed: %w", m.Name(), err)
-		}
-	}
-
-	f.ctx.Publish(EventFrameworkStartDone, nil)
 	return nil
 }
 
-func (f *Framework) Stop() {
+func (f *Framework) Stop() error {
 	f.ctx.Publish(EventFrameworkStop, nil)
 
 	for _, m := range f.modules {
-		_ = m.Stop(f.ctx)
+		err := m.Stop(f.ctx)
+		if err != nil {
+			return oops.Wrap(err)
+		}
 	}
 
 	f.ctx.Publish(EventFrameworkStopDone, nil)
+	return nil
+}
+
+func (f *Framework) runPhase(cfg PhaseConfig) error {
+	appID := f.appID
+
+	slog.Info(fmt.Sprintf("Framework Module %s Start", pkg.Capitalize(cfg.Phase.String())), "phase", cfg.Phase, "appID", appID)
+	f.ctx.Publish(cfg.EventStart, nil)
+
+	for _, m := range f.modules {
+		slog.Info(fmt.Sprintf("%s module", cfg.Action[0]), "phase", cfg.Phase, "module", m.Name(), "appID", appID)
+		if err := cfg.Handler(f, m); err != nil {
+			slog.Error(fmt.Sprintf("%s module failed", cfg.Action[0]), "phase", cfg.Phase, "module", m.Name(), "error", err, "appID", appID)
+			return fmt.Errorf("module %s %s failed: %w", m.Name(), cfg.Phase, err)
+		}
+		slog.Info(fmt.Sprintf("%s module", cfg.Action[1]), "phase", cfg.Phase, "module", m.Name(), "appID", appID)
+	}
+
+	f.ctx.Publish(cfg.EventDone, nil)
+	slog.Info(fmt.Sprintf("Framework Module %s Done", pkg.Capitalize(cfg.Phase.String())), "phase", cfg.Phase, "appID", appID)
+
+	return nil
 }
