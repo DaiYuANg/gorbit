@@ -1,71 +1,44 @@
 package framework
 
 import (
-	"github.com/go-co-op/gocron/v2"
 	"github.com/samber/do/v2"
 	"github.com/samber/oops"
 	goeventbus "github.com/stanipetrosyan/go-eventbus"
 )
 
-func New(opts ...Options) (*Framework, error) {
-	i := do.New()
-	do.NewWithOpts(&do.InjectorOpts{
-		HookBeforeRegistration: []func(scope *do.Scope, serviceName string){
-			func(scope *do.Scope, serviceName string) {
-
-			},
-		},
-		HookAfterRegistration:    nil,
-		HookBeforeInvocation:     nil,
-		HookAfterInvocation:      nil,
-		HookBeforeShutdown:       nil,
-		HookAfterShutdown:        nil,
-		Logf:                     nil,
-		HealthCheckParallelism:   0,
-		HealthCheckGlobalTimeout: 0,
-		HealthCheckTimeout:       0,
-		StructTagKey:             "",
-	})
-	scheduler, err := gocron.NewScheduler(
-		gocron.WithLogger(
-			gocron.NewLogger(gocron.LogLevelInfo),
-		),
-	)
-	if err != nil {
-		return nil, oops.Wrap(err)
-	}
-	eventbus := goeventbus.NewEventBus()
-	fw := &Framework{
-		injector: i,
-		//Options:  opts,
-		eventBus:  &eventbus,
-		scheduler: &scheduler,
-	}
-	return fw, err
+type Framework struct {
+	injector do.Injector
+	modules  []Module
+	eventBus *goeventbus.EventBus
+	ctx      *AppContext
 }
 
-// Use 注册模块
-func (fw *Framework) Use(m Module) error {
-	fw.modules = append(fw.modules, m)
-	return oops.Wrap(m.Register(fw.injector))
+func New() *Framework {
+	inj := do.New()
+	eb := goeventbus.New()
+
+	ctx := newAppContext(inj, eb)
+
+	return &Framework{
+		injector: inj,
+		eventBus: eb,
+		modules:  []Module{},
+		ctx:      ctx,
+	}
 }
 
-// Run 启动服务（例如启动 HTTP server）
-func (fw *Framework) Run() error {
-	// Init 阶段
-	for _, m := range fw.modules {
-		if err := m.Init(fw.injector); err != nil {
-			return oops.Wrapf(err, "init module %s", m.Name())
-		}
-	}
-
-	// Start 阶段
-	for _, m := range fw.modules {
-		if err := m.Start(fw.injector); err != nil {
-			return oops.Wrapf(err, "start module %s", m.Name())
-		}
-	}
-
-	// 阻塞等待（例如 HTTP 模块）
-	return nil
+func (f *Framework) RegisterModule(m Module) {
+	f.modules = append(f.modules, m)
 }
+
+// --- lifecycle events topic ---
+const (
+	EventFrameworkRegisterStart = "framework.register.start"
+	EventFrameworkRegisterDone  = "framework.register.done"
+	EventFrameworkInitStart     = "framework.init.start"
+	EventFrameworkInitDone      = "framework.init.done"
+	EventFrameworkStart         = "framework.start.start"
+	EventFrameworkStartDone     = "framework.start.done"
+	EventFrameworkStop          = "framework.stop.start"
+	EventFrameworkStopDone      = "framework.stop.done"
+)
