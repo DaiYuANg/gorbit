@@ -14,11 +14,6 @@ func newAppContext(i do.Injector, e goeventbus.EventBus) *AppContext {
 	return &AppContext{injector: i, events: e}
 }
 
-// Get 通过 DI 获取对象，外部看不到 Injector
-func (c *AppContext) Get() (any, error) {
-	return do.Invoke[any](c.injector)
-}
-
 // Publish 事件发布
 func (c *AppContext) Publish(topic string, payload any) {
 	message := goeventbus.NewMessageBuilder().SetPayload(payload).Build()
@@ -28,4 +23,8 @@ func (c *AppContext) Publish(topic string, payload any) {
 // On 事件订阅
 func (c *AppContext) On(topic string, handler func(ctx goeventbus.Context)) {
 	c.events.Channel(topic).Subscriber().Listen(handler)
+}
+
+func (c *AppContext) Injector() do.Injector {
+	return c.injector
 }

@@ -14,10 +14,11 @@ import (
 
 type LoggerModule struct {
 	logger *slog.Logger
+	framework.Priority
 }
 
 func NewLoggerModule() *LoggerModule {
-	return &LoggerModule{}
+	return &LoggerModule{Priority: framework.NewPriority(framework.PriorityHigh)}
 }
 
 func (l *LoggerModule) Name() string {
