@@ -12,7 +12,7 @@ func New(modules ...Module) *Framework {
 	inj := do.New()
 	slog.Info("Framework init")
 	eb := goeventbus.NewEventBus()
-
+	logger := slog.Default()
 	ctx := newAppContext(inj, eb)
 	slog.Info("Framework Context Wire Finish")
 	return &Framework{
@@ -21,6 +21,7 @@ func New(modules ...Module) *Framework {
 		modules:  modules,
 		ctx:      ctx,
 		appID:    uuid.New().String(),
+		logger:   logger,
 	}
 }
 

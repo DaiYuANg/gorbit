@@ -1,6 +1,8 @@
 package framework
 
 import (
+	"log/slog"
+
 	"github.com/samber/do/v2"
 	goeventbus "github.com/stanipetrosyan/go-eventbus"
 )
@@ -11,6 +13,7 @@ type Framework struct {
 	eventBus goeventbus.EventBus
 	ctx      *AppContext
 	appID    string
+	logger   *slog.Logger
 }
 
 // --- lifecycle events topic ---

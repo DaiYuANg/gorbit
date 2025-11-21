@@ -1,10 +1,11 @@
 package zap_logger
 
 import (
-	"fmt"
+	"os"
 
 	"github.com/DaiYuANg/gorbit/framework"
 	"github.com/samber/do/v2"
+	"go.uber.org/zap/zapcore"
 
 	"log/slog"
 
@@ -14,13 +15,16 @@ import (
 
 type LoggerModule struct {
 	logger *slog.Logger
-	framework.Priority
+	framework.Prioritizer
 }
 
 func NewLoggerModule() *LoggerModule {
-	return &LoggerModule{Priority: framework.NewPriority(framework.PriorityHigh)}
+	return &LoggerModule{}
 }
 
+func (l *LoggerModule) Priority() int {
+	return framework.NewPriority(framework.PriorityHigh).Value
+}
 func (l *LoggerModule) Name() string {
 	return "LoggerModule"
 }
@@ -28,10 +32,7 @@ func (l *LoggerModule) Name() string {
 // Register 阶段：可在 injector 中注册 logger
 func (l *LoggerModule) Register(i do.Injector) error {
 	// 使用 zap 创建生产日志
-	zapLogger, err := zap.NewProduction()
-	if err != nil {
-		return fmt.Errorf("failed to create zap logger: %w", err)
-	}
+	zapLogger := newLogger()
 
 	// 将 zap 转为 slog handler
 	l.logger = slog.New(slogzap.Option{
@@ -63,4 +64,18 @@ func (l *LoggerModule) Start(ctx *framework.AppContext) error {
 func (l *LoggerModule) Stop(ctx *framework.AppContext) error {
 	l.logger.Info("LoggerModule stopped")
 	return nil
+}
+
+func newLogger() *zap.Logger {
+	encoderCfg := zap.NewProductionEncoderConfig() // 可用 zap.NewProductionEncoderConfig() 视需求选择
+	encoderCfg.EncodeLevel = zapcore.CapitalColorLevelEncoder
+
+	core := zapcore.NewCore(
+		zapcore.NewConsoleEncoder(encoderCfg), // 关键：使用 ConsoleEncoder 而不是 JSONEncoder
+		zapcore.AddSync(os.Stdout),
+		zapcore.InfoLevel,
+	)
+
+	logger := zap.New(core)
+	return logger
 }
