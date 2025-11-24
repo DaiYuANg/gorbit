@@ -2,21 +2,23 @@ package gnet
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 
 	"github.com/panjf2000/gnet/v2"
+	"github.com/samber/lo"
 	"github.com/samber/oops"
 	"go.uber.org/fx"
 )
 
 func NewModule(userServer gnet.EventHandler, logger *slog.Logger, opts ...Option) fx.Option {
 	cfg := &Config{
-		Addr:      ":8880",
+		Addr:      fmt.Sprintf("tcp://:%d", 8080),
 		Multicore: true,
 	}
-	for _, o := range opts {
-		o(cfg)
-	}
+	lo.ForEach(opts, func(item Option, _ int) {
+		item(cfg)
+	})
 
 	return fx.Module(
 		"v_server",

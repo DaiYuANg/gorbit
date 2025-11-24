@@ -4,7 +4,9 @@ use (
 	.
 	./config
 	./database
-	./examples
+	./examples/mini_application
+	./examples/http_application
+	./examples/gnet_application
 	./metrics
 	./logger/zap
 	logger

@@ -3,6 +3,7 @@ package fiber
 import (
 	"context"
 	"fmt"
+	"log/slog"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -35,11 +36,11 @@ func NewFiberModule(opts ...FiberOption) fx.Option {
 
 			return app
 		}),
-		fx.Invoke(func(lc fx.Lifecycle, app *fiber.App) {
+		fx.Invoke(func(lc fx.Lifecycle, app *fiber.App, logger *slog.Logger) {
 			lc.Append(fx.Hook{
 				OnStart: func(ctx context.Context) error {
 					// 不启动监听，由用户自行调用 Listen 或自己在 invoke 中启动
-					fmt.Println("Fiber module ready")
+					logger.Info("Fiber module ready")
 					go func() {
 						err := app.Listen(fmt.Sprintf(":%d", options.Port))
 						if err != nil {

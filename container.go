@@ -9,9 +9,9 @@ import (
 )
 
 var commonOption = fx.Options(
-	fx.WithLogger(func(log *slog.Logger) fxevent.Logger {
-		fxLogger := &fxevent.SlogLogger{Logger: log}
-		fxLogger.UseLogLevel(slog.LevelDebug)
+	fx.WithLogger(func(logger *slog.Logger) fxevent.Logger {
+		fxLogger := &fxevent.SlogLogger{Logger: logger}
+		fxLogger.UseLogLevel(slog.LevelInfo)
 		return fxLogger
 	}),
 )
@@ -23,11 +23,10 @@ func CreateContainer(options ...fx.Option) (*fx.App, error) {
 	if err := fx.ValidateApp(allOptions...); err != nil {
 		return nil, oops.
 			With("when", "creating fx container").
-			Wrap(err).(*oops.OopsError)
+			Wrap(err)
 	}
 
 	// 创建 fx.App
-	app := fx.New(options...)
-
+	app := fx.New(allOptions...)
 	return app, nil
 }

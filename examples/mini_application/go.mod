@@ -1,4 +1,4 @@
-module github.com/DaiYuANg/gorbit/example/getting-started
+module github.com/DaiYuANg/gorbit/example/mini-application
 
 go 1.24
 

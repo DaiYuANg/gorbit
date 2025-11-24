@@ -16,7 +16,6 @@ import (
 func main() {
 	container, err := gorbit.CreateContainer(
 		zap_logger.NewModule(),
-
 		cli.NewCLIModule(),
 		config.NewConfigModule(UserConfig{}),
 		schedule.Module,
