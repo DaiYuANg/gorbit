@@ -3,11 +3,18 @@ go 1.25.0
 use (
 	.
 	./config
-	./data
-	./examples/getting-started
-	framework
-	./http
+	./database
+	./examples
 	./metrics
 	./logger/zap
-	pkg
+	logger
+	validator
+	schedule
+	http/fiber
+	database/bun
+	eventbus
+	http
+	cli
+	jwt
+	cache
 )
