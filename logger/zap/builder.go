@@ -56,16 +56,18 @@ func newLogger(cfg *Config) *zap.Logger {
 		fileEncoder = zapcore.NewConsoleEncoder(fileEncoderCfg)
 	}
 
+	level := zap.NewAtomicLevelAt(zapcore.Level(cfg.Level))
+
 	consoleCore := zapcore.NewCore(
 		consoleEncoder,
 		zapcore.AddSync(os.Stdout),
-		cfg.Level,
+		level,
 	)
 
 	fileCore := zapcore.NewCore(
 		fileEncoder,
 		zapcore.AddSync(lumberJackLogger),
-		cfg.Level,
+		level,
 	)
 
 	core := zapcore.NewTee(consoleCore, fileCore)

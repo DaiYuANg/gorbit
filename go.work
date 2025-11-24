@@ -17,4 +17,5 @@ use (
 	cli
 	jwt
 	cache
+	gnet
 )

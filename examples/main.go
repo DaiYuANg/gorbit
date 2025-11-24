@@ -2,26 +2,27 @@ package main
 
 import (
 	"github.com/DaiYuANg/gorbit"
+	"github.com/DaiYuANg/gorbit/cli"
 	"github.com/DaiYuANg/gorbit/database/bun"
 	"github.com/DaiYuANg/gorbit/eventbus"
 	"github.com/DaiYuANg/gorbit/http/fiber"
-	"github.com/DaiYuANg/gorbit/jwt"
-	"github.com/DaiYuANg/gorbit/logger"
-	"github.com/DaiYuANg/gorbit/modules/cli"
+	"github.com/DaiYuANg/gorbit/logger/zap_logger"
 	"github.com/DaiYuANg/gorbit/modules/config"
 	"github.com/DaiYuANg/gorbit/schedule"
-	"github.com/DaiYuANg/gorbit/validator"
+	vm "github.com/DaiYuANg/gorbit/validator"
+	"github.com/go-playground/validator/v10"
 )
 
 func main() {
 	container, err := gorbit.CreateContainer(
-		logger.NewModule(),
+		zap_logger.NewModule(),
+
 		cli.NewCLIModule(),
 		config.NewConfigModule(UserConfig{}),
 		schedule.Module,
-		jwt.NewJwtModule(),
+		//jwt.NewJwtModule(),
 		bun.NewDatabaseModule(),
-		validator.Module,
+		vm.NewValidatorModule(validator.WithRequiredStructEnabled(), validator.WithPrivateFieldValidation()),
 		eventbus.Module,
 		fiber.NewFiberModule(),
 	)

@@ -14,7 +14,3 @@ type APIDoc struct {
 func (h Http) GetPort() string {
 	return strconv.Itoa(h.Port)
 }
-
-type Logger struct {
-	Level string `koanf:"level"`
-}

@@ -1,13 +1,15 @@
 package zap_logger
 
-import "go.uber.org/zap/zapcore"
+import (
+	"log/slog"
+)
 
 type Config struct {
 	// log file path
 	FilePath string
 
 	// log level
-	Level zapcore.Level
+	Level slog.Level
 
 	// rotate configs
 	MaxSize    int
@@ -23,7 +25,7 @@ type Config struct {
 func defaultConfig() *Config {
 	return &Config{
 		FilePath:   "",
-		Level:      zapcore.DebugLevel,
+		Level:      slog.LevelInfo,
 		MaxSize:    100,
 		MaxBackups: 5,
 		MaxAge:     7,
@@ -42,7 +44,7 @@ func WithFilePath(p string) Option {
 	}
 }
 
-func WithLevel(l zapcore.Level) Option {
+func WithLevel(l slog.Level) Option {
 	return func(c *Config) {
 		c.Level = l
 	}

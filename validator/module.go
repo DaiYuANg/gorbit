@@ -5,8 +5,10 @@ import (
 	"go.uber.org/fx"
 )
 
-var Module = fx.Module("validator", fx.Provide(newValidator))
-
-func newValidator(option ...validator.Option) *validator.Validate {
-	return validator.New(option...)
+func NewValidatorModule(option ...validator.Option) fx.Option {
+	return fx.Module("validator", fx.Provide(
+		func() *validator.Validate {
+			return validator.New(option...)
+		},
+	))
 }

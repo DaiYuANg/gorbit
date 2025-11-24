@@ -3,6 +3,7 @@ package gorbit
 import (
 	"log/slog"
 
+	"github.com/samber/oops"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
 )
@@ -15,16 +16,18 @@ var commonOption = fx.Options(
 	}),
 )
 
-func CreateContainer(option ...fx.Option) (*fx.App, error) {
-	options := append(option, commonOption)
-	err := fx.ValidateApp(options...)
-	if err != nil {
-		return nil, err
+// 创建 Container
+func CreateContainer(options ...fx.Option) (*fx.App, error) {
+	allOptions := append(options, commonOption)
+	// 先验证配置
+	if err := fx.ValidateApp(allOptions...); err != nil {
+		return nil, oops.
+			With("when", "creating fx container").
+			Wrap(err).(*oops.OopsError)
 	}
-	app := fx.New(
-		commonOption,
-		fx.Options(option...),
-	)
+
+	// 创建 fx.App
+	app := fx.New(options...)
 
 	return app, nil
 }

@@ -1,6 +1,6 @@
 module github.com/DaiYuANg/gorbit
 
-go 1.24
+go 1.24.0
 
 tool (
 	github.com/go-task/task/v3/cmd/task
@@ -8,9 +8,7 @@ tool (
 	honnef.co/go/tools/cmd/staticcheck
 )
 
-require (
-	go.uber.org/fx v1.24.0
-)
+require go.uber.org/fx v1.24.0
 
 require (
 	4d63.com/gocheckcompilerdirectives v1.3.0 // indirect
@@ -230,14 +228,14 @@ require (
 	go.uber.org/automaxprocs v1.6.0 // indirect
 	go.uber.org/dig v1.19.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	go.uber.org/zap v1.27.0 // indirect
+	go.uber.org/zap v1.27.1 // indirect
 	golang.org/x/crypto v0.39.0 // indirect
 	golang.org/x/exp v0.0.0-20250620022241-b7579e27df2b // indirect
 	golang.org/x/exp/typeparams v0.0.0-20250210185358-939b2ce775ac // indirect
 	golang.org/x/mod v0.25.0 // indirect
 	golang.org/x/net v0.41.0 // indirect
 	golang.org/x/sync v0.16.0 // indirect
-	golang.org/x/sys v0.34.0 // indirect
+	golang.org/x/sys v0.38.0 // indirect
 	golang.org/x/term v0.32.0 // indirect
 	golang.org/x/text v0.27.0 // indirect
 	golang.org/x/tools v0.34.0 // indirect
