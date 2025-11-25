@@ -5,6 +5,8 @@ import (
 	"go.uber.org/fx"
 )
 
-var Module = fx.Module("event_bus",
-	fx.Provide(goeventbus.NewEventBus),
-)
+func NewEventBusModule() fx.Option {
+	return fx.Module("event_bus",
+		fx.Provide(goeventbus.NewEventBus),
+	)
+}

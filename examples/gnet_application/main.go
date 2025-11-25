@@ -50,7 +50,7 @@ func (es *testServer) OnTick() (delay time.Duration, action gnet.Action) {
 }
 
 func main() {
-	container, err := gorbit.CreateContainer(
+	container, err := gorbit.CreateContainerWithFxLogger(
 		zap_logger.NewModule(),
 		gorbit_gnet.NewModule(&testServer{}, slog.Default()),
 	)

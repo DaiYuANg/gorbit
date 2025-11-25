@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"fmt"
+	"log/slog"
 
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
@@ -32,9 +32,9 @@ func NewCLIModule(opts ...CLIOption) fx.Option {
 
 			return root
 		}),
-		fx.Invoke(func(cmd *cobra.Command) {
+		fx.Invoke(func(cmd *cobra.Command, logger *slog.Logger) {
 			// 注意这里不直接调用 Execute()，可以在 fx.App 完成生命周期后再调用
-			fmt.Println("CLI module ready, use cmd.Execute() to run CLI")
+			logger.Info("CLI module ready, use cmd.Execute() to run CLI")
 		}),
 	)
 }

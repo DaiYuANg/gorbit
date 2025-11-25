@@ -1,8 +1,11 @@
 package config
 
 import (
+	"log/slog"
+	"reflect"
 	"strings"
 
+	_ "github.com/joho/godotenv/autoload"
 	"github.com/knadh/koanf/parsers/json"
 	"github.com/knadh/koanf/parsers/toml"
 	"github.com/knadh/koanf/parsers/yaml"
@@ -10,17 +13,45 @@ import (
 	"github.com/knadh/koanf/providers/file"
 	"github.com/knadh/koanf/providers/structs"
 	"github.com/knadh/koanf/v2"
+	"github.com/samber/lo"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 )
 
 // NewConfigModule 返回 fx.Module
 // NewConfigModule 泛型实现
+func expandStructFields[T any](cfg *T) fx.Option {
+	v := reflect.ValueOf(cfg).Elem()
+	t := v.Type()
+
+	opts := make([]fx.Option, 0)
+
+	for i := 0; i < t.NumField(); i++ {
+		f := t.Field(i)
+		if !f.IsExported() {
+			continue
+		}
+
+		fv := v.Field(i).Interface()
+		fieldType := f.Type
+
+		opts = append(opts,
+			fx.Provide(func() interface{} {
+				// 强制返回对应字段类型
+				return fv
+			}),
+		)
+
+		slog.Info("fx provide sub-config", "type", fieldType.String())
+	}
+
+	return fx.Options(opts...)
+}
 func NewConfigModule[T any](defaultStruct T, opts ...ConfigOption[T]) fx.Option {
 	options := defaultConfigOptions(defaultStruct)
-	for _, o := range opts {
+	lo.ForEach(opts, func(o ConfigOption[T], _ int) {
 		o(options)
-	}
+	})
 
 	return fx.Module("config_module",
 		fx.Provide(func() *koanf.Koanf {
@@ -35,25 +66,23 @@ func NewConfigModule[T any](defaultStruct T, opts ...ConfigOption[T]) fx.Option 
 			}
 
 			// 加载 JSON 文件
-			for _, f := range options.JSONFiles {
+			lo.ForEach(options.JSONFiles, func(f string, _ int) {
 				if err := k.Load(file.Provider(f), json.Parser()); err != nil {
 					logger.Warnf("error loading JSON config %s: %v", f, err)
 				}
-			}
+			})
 
-			// 加载 YAML 文件
-			for _, f := range options.YAMLFiles {
+			lo.ForEach(options.YAMLFiles, func(f string, _ int) {
 				if err := k.Load(file.Provider(f), yaml.Parser()); err != nil {
 					logger.Warnf("error loading YAML config %s: %v", f, err)
 				}
-			}
+			})
 
-			// 加载 TOML 文件
-			for _, f := range options.TOMLFiles {
+			lo.ForEach(options.TOMLFiles, func(f string, _ int) {
 				if err := k.Load(file.Provider(f), toml.Parser()); err != nil {
 					logger.Warnf("error loading TOML config %s: %v", f, err)
 				}
-			}
+			})
 
 			// 加载环境变量
 			mapEnvKey := func(s string) string {
@@ -68,6 +97,7 @@ func NewConfigModule[T any](defaultStruct T, opts ...ConfigOption[T]) fx.Option 
 				return nil, err
 			}
 
+			logger.Infof("loaded config: %+v", k.All())
 			logger.Infof("loaded config: %+v", def)
 			return &def, nil
 		}),

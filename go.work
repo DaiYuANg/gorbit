@@ -11,7 +11,7 @@ use (
 	./logger/zap
 	logger
 	validator
-	schedule
+	./scheduler
 	http/fiber
 	database/bun
 	eventbus

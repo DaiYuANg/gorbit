@@ -2,7 +2,7 @@ package http
 
 import "strconv"
 
-type Http struct {
+type Config struct {
 	Port int `koanf:"port"`
 }
 
@@ -11,6 +11,6 @@ type APIDoc struct {
 	Path   string `koanf:"path"`
 }
 
-func (h Http) GetPort() string {
+func (h Config) GetPort() string {
 	return strconv.Itoa(h.Port)
 }

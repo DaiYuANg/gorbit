@@ -1,4 +1,4 @@
-module github.com/DaiYuANg/gorbit/schedule
+module github.com/DaiYuANg/gorbit/scheduler
 
 go 1.25
 

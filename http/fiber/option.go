@@ -1,6 +1,8 @@
 package fiber
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+)
 
 // FiberOption 功能型 Option
 type FiberOption func(*fiberOptions)
@@ -39,8 +41,4 @@ func WithCustomHandler(f func(app *fiber.App)) FiberOption {
 
 func WithConfig(cfg fiber.Config) FiberOption {
 	return func(o *fiberOptions) { o.Config = cfg }
-}
-
-func WithPort() {
-
 }

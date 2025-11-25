@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/samber/lo"
 	"github.com/samber/oops"
 	"go.uber.org/fx"
 )
@@ -15,9 +16,9 @@ import (
 // NewFiberModule 返回 fx.Module
 func NewFiberModule(opts ...FiberOption) fx.Option {
 	options := defaultFiberOptions()
-	for _, o := range opts {
+	lo.ForEach(opts, func(o FiberOption, _ int) {
 		o(options)
-	}
+	})
 
 	return fx.Module("fiber_http",
 		fx.Provide(func() *fiber.App {

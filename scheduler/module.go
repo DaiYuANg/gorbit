@@ -8,7 +8,9 @@ import (
 	"go.uber.org/fx"
 )
 
-var Module = fx.Module("scheduleModule", fx.Provide(newScheduler), fx.Invoke(startScheduler))
+func NewSchedulerModule() fx.Option {
+	return fx.Module("scheduleModule", fx.Provide(newScheduler), fx.Invoke(startScheduler))
+}
 
 func newScheduler(logger *slog.Logger) (gocron.Scheduler, error) {
 	gocronLogger := NewGocronSlogLogger(logger)
