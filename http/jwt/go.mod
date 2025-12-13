@@ -1,4 +1,4 @@
-module github.com/DaiYuANg/gorbit/jwt
+module github.com/DaiYuANg/gorbit/http/jwt
 
 go 1.25
 

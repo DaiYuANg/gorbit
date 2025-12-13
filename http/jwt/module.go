@@ -7,7 +7,7 @@ import (
 	"go.uber.org/fx"
 )
 
-func NewJwtModule(opts ...JwtOption) fx.Option {
+func NewJwtModule(opts ...Option) fx.Option {
 	options := defaultJwtOptions()
 	for _, o := range opts {
 		o(options)

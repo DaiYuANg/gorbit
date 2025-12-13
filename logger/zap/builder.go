@@ -3,11 +3,12 @@ package zap_logger
 import (
 	"context"
 	"errors"
-	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"syscall"
 
+	"github.com/samber/oops"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -82,13 +83,39 @@ func sugaredLogger(log *zap.Logger) *zap.SugaredLogger {
 	return log.Sugar()
 }
 
+// deferLogger 安全注册 logger 的 OnStop Hook
+// 支持 stdout/stderr 和文件日志，忽略常见无效文件描述符错误
 func deferLogger(lc fx.Lifecycle, logger *zap.Logger) {
 	lc.Append(
 		fx.Hook{
-			OnStop: func(context.Context) error {
-				if err := logger.Sync(); err != nil && !errors.Is(err, syscall.EINVAL) {
-					return fmt.Errorf("logger sync failed: %v", err)
+			OnStop: func(ctx context.Context) error {
+				// 封装 sync 函数
+				safeSync := func(w io.Writer) error {
+					if f, ok := w.(*os.File); ok {
+						if err := f.Sync(); err != nil &&
+							!errors.Is(err, syscall.EBADF) &&
+							!errors.Is(err, syscall.EINVAL) {
+							return err
+						}
+					}
+					return nil
 				}
+
+				// 尝试同步 stdout/stderr
+				if err := safeSync(os.Stdout); err != nil {
+					return oops.With("stdout sync failed").Wrap(err)
+				}
+				if err := safeSync(os.Stderr); err != nil {
+					return oops.With("stderr sync failed").Wrap(err)
+				}
+
+				// 尝试同步 zap 内部的 fileCore（如果是文件日志）
+				if err := logger.Sync(); err != nil &&
+					!errors.Is(err, syscall.EBADF) &&
+					!errors.Is(err, syscall.EINVAL) {
+					return oops.With("logger file sync failed").Wrap(err)
+				}
+
 				return nil
 			},
 		},

@@ -17,7 +17,7 @@ use (
 	eventbus
 	http
 	cli
-	jwt
+	./http/jwt
 	cache
 	gnet
 )

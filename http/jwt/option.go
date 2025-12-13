@@ -2,7 +2,7 @@ package jwt
 
 import "crypto/rsa"
 
-type JwtOption func(*jwtOptions)
+type Option func(*jwtOptions)
 
 type jwtOptions struct {
 	PrivateKey *rsa.PrivateKey
@@ -19,14 +19,14 @@ func defaultJwtOptions() *jwtOptions {
 }
 
 // Option helpers
-func WithPrivateKey(key *rsa.PrivateKey) JwtOption {
+func WithPrivateKey(key *rsa.PrivateKey) Option {
 	return func(o *jwtOptions) { o.PrivateKey = key }
 }
 
-func WithSigningAlg(alg string) JwtOption {
+func WithSigningAlg(alg string) Option {
 	return func(o *jwtOptions) { o.SigningAlg = alg }
 }
 
-func WithPathPrefix(prefix string) JwtOption {
+func WithPathPrefix(prefix string) Option {
 	return func(o *jwtOptions) { o.PathPrefix = prefix }
 }
