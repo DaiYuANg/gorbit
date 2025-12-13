@@ -109,7 +109,7 @@ func deferLogger(lc fx.Lifecycle, logger *zap.Logger) {
 					return oops.With("stderr sync failed").Wrap(err)
 				}
 
-				// 尝试同步 zap 内部的 fileCore（如果是文件日志）
+				// 尝试同步 zap_logger 内部的 fileCore（如果是文件日志）
 				if err := logger.Sync(); err != nil &&
 					!errors.Is(err, syscall.EBADF) &&
 					!errors.Is(err, syscall.EINVAL) {
