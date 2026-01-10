@@ -3,6 +3,7 @@ package cli
 import (
 	"log/slog"
 
+	"github.com/samber/lo"
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
 )
@@ -26,9 +27,9 @@ func NewCLIModule(opts ...CLIOption) fx.Option {
 				},
 			}
 
-			for _, cmd := range options.Commands {
+			lo.ForEach(options.Commands, func(cmd *cobra.Command, _ int) {
 				root.AddCommand(cmd)
-			}
+			})
 
 			return root
 		}),

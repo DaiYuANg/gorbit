@@ -2,15 +2,22 @@ package logger
 
 import (
 	"log/slog"
-	"os"
 
 	"go.uber.org/fx"
 )
 
-func NewModule() fx.Option {
-	return fx.Module("logger", fx.Provide(newLogger))
-}
+func NewModule(opts ...Option) fx.Option {
+	return fx.Module("logger",
+		fx.Provide(
+			func(lc fx.Lifecycle) (*slog.Logger, error) {
+				log, closer, err := NewLogger(opts...)
+				if err != nil {
+					return nil, err
+				}
 
-func newLogger() *slog.Logger {
-	return slog.New(slog.NewTextHandler(os.Stdout, nil))
+				RegisterLifecycle(lc, closer)
+				return log, nil
+			},
+		),
+	)
 }

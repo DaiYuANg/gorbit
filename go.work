@@ -8,7 +8,6 @@ use (
 	./examples/http_application
 	./examples/gnet_application
 	./metrics
-	./logger/zap_logger
 	logger
 	validator
 	./scheduler
@@ -20,4 +19,5 @@ use (
 	./http/jwt
 	cache
 	gnet
+	ants
 )
